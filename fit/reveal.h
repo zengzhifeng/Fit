@@ -35,9 +35,11 @@
 ///     MoveConstructible
 /// 
 
+#include <fit/always.h>
 #include <fit/returns.h>
 #include <fit/is_callable.h>
 #include <fit/detail/move.h>
+#include <fit/detail/delegate.h>
 
 namespace fit { 
 
@@ -60,6 +62,30 @@ struct has_failure<T, typename template_holder<
 : std::true_type
 {};
 
+template<class Sig>
+struct failure_check;
+
+template<class F, class... Ts>
+struct failure_check<F(Ts...)>
+{
+    // Use virtual function to reduce backtrace
+    virtual void check()
+    {
+        typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type;
+    }
+    // typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type;
+};
+
+template<class... Ts>
+struct failures
+: Ts...
+{};
+
+template<class... Ts>
+struct failure_checks
+{
+    typedef failures<Ts...> type;
+};
 
 template<class Sig, class Enable = void>
 struct failure_for_;
@@ -72,52 +98,47 @@ struct failure_for_<F(Ts...), typename std::enable_if<has_failure<F>::value>::ty
 template<class F, class... Ts>
 struct failure_for_<F(Ts...), typename std::enable_if<!has_failure<F>::value>::type>
 {
-    typedef decltype(std::declval<F>()(std::declval<Ts>()...)) type;
+    typedef failure_check<F(Ts...)> type;
 };
 }
 
 template<class... Ts>
 struct failure_for
-: detail::failure_for_<Ts>...
+: detail::failure_checks<typename detail::failure_for_<Ts>::type...>
 {};
 
 template<class F>
 struct reveal_adaptor: F
 {
-    reveal_adaptor()
-    {}
 
-    template<class X>
-    reveal_adaptor(X x) : F(x)
-    {}
+    FIT_INHERIT_CONSTRUCTOR(reveal_adaptor, F);
 
-    const F& base_function() const
+    template<class... Ts>
+    constexpr const F& base_function(Ts&&... xs) const
     {
-        return *this;
+        return always_ref(*this)(xs...);
     }
 
     FIT_RETURNS_CLASS(reveal_adaptor);
     
     template<class... Ts>
     constexpr auto operator()(Ts && ... xs) const
-    FIT_RETURNS(FIT_CONST_THIS->base_function()(fit::forward<Ts>(xs)...));
+    FIT_RETURNS(FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))(fit::forward<Ts>(xs)...));
 
     struct fail {};
 
     template<class... Ts>
     typename std::enable_if<
-        !is_callable<F(Ts&&...)>::value,
-        typename failure_for<F(Ts&&...)>::type
-    >::type operator()(Ts && ... xs) const
+        !is_callable<F(Ts&&...)>::value
+    >::type operator()(Ts&&...) const
     {
-        typedef typename failure_for<F(Ts&&...)>::type type_error;
-        return this->base_function()(fit::forward<Ts>(xs)...);
+        typename failure_for<F(Ts&&...)>::type();
     }
 
 };
 
 template<class F>
-reveal_adaptor<F> reveal(F f)
+constexpr reveal_adaptor<F> reveal(F f)
 {
     return reveal_adaptor<F>(fit::move(f));
 }
