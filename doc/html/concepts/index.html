@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-        <title>FIT_STATIC_LAMBDA - Fit</title>
+        <title>Basic Concepts - Fit</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -60,7 +60,7 @@
                 
                 
                 
-                    <li class="dropdown">
+                    <li class="dropdown active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -68,8 +68,8 @@
                                 <a href="../quickstart/">Quick Start</a>
                             </li>
                         
-                            <li >
-                                <a href="../concepts/">Basic Concepts</a>
+                            <li class="active">
+                                <a href="./">Basic Concepts</a>
                             </li>
                         
                             <li >
@@ -191,7 +191,7 @@
                 
                 
                 
-                    <li class="dropdown active">
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Utilities <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -207,8 +207,8 @@
                                 <a href="../function/">FIT_STATIC_FUNCTION</a>
                             </li>
                         
-                            <li class="active">
-                                <a href="./">FIT_STATIC_LAMBDA</a>
+                            <li >
+                                <a href="../lambda/">FIT_STATIC_LAMBDA</a>
                             </li>
                         
                             <li >
@@ -236,12 +236,12 @@
                 
                 
                 <li >
-                    <a rel="next" href="../function/">
+                    <a rel="next" href="../quickstart/">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="../placeholders/">
+                    <a rel="prev" href="../requirements/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -266,27 +266,145 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#fit_static_lambda">FIT_STATIC_LAMBDA</a></li>
+        <li class="main active"><a href="#basic-concepts">Basic Concepts</a></li>
         
-            <li><a href="#description">Description</a></li>
+            <li><a href="#functionobject">FunctionObject</a></li>
         
-            <li><a href="#example">Example</a></li>
+            <li><a href="#unaryfunctionobject">UnaryFunctionObject</a></li>
+        
+            <li><a href="#binaryfunctionobject">BinaryFunctionObject</a></li>
+        
+            <li><a href="#mutablefunctionobject">MutableFunctionObject</a></li>
         
     
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="fit_static_lambda">FIT_STATIC_LAMBDA</h1>
-<h2 id="description">Description</h2>
-<p>The <code>FIT_STATIC_LAMBDA</code> macro allows initializing lambdas at compile-time
-in a <code>constexpr</code> expression.</p>
-<h2 id="example">Example</h2>
-<pre class="prettyprint well"><code>const constexpr auto add_one = FIT_STATIC_LAMBDA(int x)
+<h1 id="basic-concepts">Basic Concepts</h1>
+<h2 id="functionobject">FunctionObject</h2>
+<p>Is an object with a <code>const</code> call operator:</p>
+<pre class="prettyprint well"><code class="cpp">concept FunctionObject
 {
-    return x + 1;
+    template&lt;class... Ts&gt;
+    auto operator()(Ts&amp;&amp;...) const;
 };
 </code></pre>
+
+<p>Requirements:</p>
+<p>The type F satisfies FunctionObject if</p>
+<pre class="prettyprint well"><code>The type F satisfies std::is_object, and
+</code></pre>
+<p>Given</p>
+<pre class="prettyprint well"><code>f, an object of type const F
+args..., suitable argument list, which may be empty
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f(args...)</td>
+<td>performs a function call</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unaryfunctionobject">UnaryFunctionObject</h2>
+<p>Is an object with a <code>const</code> call operator that accepts one parameter:</p>
+<pre class="prettyprint well"><code class="cpp">concept UnaryFunctionObject
+{
+    template&lt;class T&gt;
+    auto operator()(T&amp;&amp;) const;
+};
+</code></pre>
+
+<p>Requirements:</p>
+<pre class="prettyprint well"><code>FunctionObject
+</code></pre>
+<p>Given</p>
+<pre class="prettyprint well"><code>f, an object of type const F
+arg, a single argument
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f(arg)</td>
+<td>performs a function call</td>
+</tr>
+</tbody>
+</table>
+<h2 id="binaryfunctionobject">BinaryFunctionObject</h2>
+<p>Is an object with a <code>const</code> call operator that accepts two parameter:</p>
+<pre class="prettyprint well"><code class="cpp">concept UnaryFunctionObject
+{
+    template&lt;class T, class U&gt;
+    auto operator()(T&amp;&amp;, U&amp;&amp;) const;
+};
+</code></pre>
+
+<p>Requirements:</p>
+<pre class="prettyprint well"><code>FunctionObject
+</code></pre>
+<p>Given</p>
+<pre class="prettyprint well"><code>f, an object of type const F
+arg1, a single argument
+arg2, a single argument
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f(arg1, arg2)</td>
+<td>performs a function call</td>
+</tr>
+</tbody>
+</table>
+<h2 id="mutablefunctionobject">MutableFunctionObject</h2>
+<p>Is an object with a <code>mutable</code> call operator:</p>
+<pre class="prettyprint well"><code class="cpp">concept FunctionObject
+{
+    template&lt;class... Ts&gt;
+    auto operator()(Ts&amp;&amp;...);
+};
+</code></pre>
+
+<p>Requirements:</p>
+<p>The type F satisfies FunctionObject if</p>
+<pre class="prettyprint well"><code>The type F satisfies std::is_object, and
+</code></pre>
+<p>Given</p>
+<pre class="prettyprint well"><code>f, an object of type F
+args..., suitable argument list, which may be empty
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>f(args...)</td>
+<td>performs a function call</td>
+</tr>
+</tbody>
+</table>
 </div>
         </div>
 
