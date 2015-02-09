@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-        <title>mutable - Fit</title>
+        <title>capture - Fit</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -89,7 +89,7 @@
                 
                 
                 
-                    <li class="dropdown active">
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Adaptors <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -137,8 +137,8 @@
                                 <a href="../match/">match</a>
                             </li>
                         
-                            <li class="active">
-                                <a href="./">mutable</a>
+                            <li >
+                                <a href="../mutable/">mutable</a>
                             </li>
                         
                             <li >
@@ -191,7 +191,7 @@
                 
                 
                 
-                    <li class="dropdown">
+                    <li class="dropdown active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Utilities <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -199,8 +199,8 @@
                                 <a href="../args/">args</a>
                             </li>
                         
-                            <li >
-                                <a href="../capture/">capture</a>
+                            <li class="active">
+                                <a href="./">capture</a>
                             </li>
                         
                             <li >
@@ -244,12 +244,12 @@
                 
                 
                 <li >
-                    <a rel="next" href="../match/">
+                    <a rel="next" href="../args/">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="../partial/">
+                    <a rel="prev" href="../each_arg/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -274,36 +274,50 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#mutable">mutable</a></li>
+        <li class="main active"><a href="#capture">capture</a></li>
         
             <li><a href="#description">Description</a></li>
         
             <li><a href="#synopsis">Synopsis</a></li>
         
-            <li><a href="#requirements">Requirements</a></li>
+            <li><a href="#example">Example</a></li>
         
     
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="mutable">mutable</h1>
+<h1 id="capture">capture</h1>
 <h2 id="description">Description</h2>
-<p>The <code>mutable</code> function adaptor allows using a non-const function object
-inside of a const-function object. In Fit, all the function adaptors use
-<code>const</code> call overloads, so if there is a function that has a non-const
-call operator, it couldn't be used directly. So, <code>mutable_</code> allows the
-function to be used inside of the call operator.</p>
-<p>NOTE: This function should be used with caution since many functions are
-copied, so relying on some internal shared state can be error-prone.</p>
+<p>The <code>capture</code> function is used to capture values in a function. It
+provides more flexibility in capturing than the lambda capture list in
+C++. It provides a way to do move and perfect capturing. The values
+captured are prepended to the argument list of the function that will be
+called.</p>
 <h2 id="synopsis">Synopsis</h2>
-<pre class="prettyprint well"><code>template&lt;class F&gt;
-mutable_adaptor&lt;F&gt; mutable_(F f)
+<pre class="prettyprint well"><code>// Capture lvalues and rvalues
+template&lt;class... Ts&gt;
+constexpr auto capture(Ts&amp;&amp;... xs);
+
+// Capture using perfect forwarding
+template&lt;class... Ts&gt;
+constexpr auto capture_forward(Ts&amp;&amp;... xs);
+
+// Capture by decaying each value
+template&lt;class... Ts&gt;
+constexpr auto capture_decay(Ts&amp;&amp;... xs);
 </code></pre>
-<h2 id="requirements">Requirements</h2>
-<p>F must be:</p>
-<pre class="prettyprint well"><code>MutableFunctionObject
-MoveConstructible
+<h2 id="example">Example</h2>
+<pre class="prettyprint well"><code>struct sum_f
+{
+    template&lt;class T, class U&gt;
+    T operator()(T x, U y) const
+    {
+        return x+y;
+    }
+};
+auto add_one = fit::capture(1)(sum_f());
+assert(add_one(2) == 3);
 </code></pre>
 </div>
         </div>
