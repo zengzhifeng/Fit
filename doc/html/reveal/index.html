@@ -289,11 +289,12 @@
 
 <h1 id="reveal">reveal</h1>
 <h2 id="description">Description</h2>
-<p>The <code>reveal</code> function adaptor turns substitution failures into compile errors.
-Sometimes an error in a function that causes a substitution failure, will
-remove the function from valid overloads thus masking the error inside the
-function. The <code>reveal</code> adaptor reveals these errors by forcing a compile
-error, instead of a substitution failure.</p>
+<p>The <code>reveal</code> function adaptor helps shows the error messages that get
+masked on some compilers. Sometimes an error in a function that causes a
+substitution failure, will remove the function from valid overloads. On
+compilers without a backtrace for substitution failure, this will mask the
+error inside the function. The <code>reveal</code> adaptor will expose these error
+message while still keeping the function SFINAE-friendly.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre class="prettyprint well"><code>template&lt;class F&gt;
 reveal_adaptor&lt;F&gt; reveal(F f);
