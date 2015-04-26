@@ -8,6 +8,7 @@
 #ifndef FIT_GUARD_FUNCTION_FUSE_H
 #define FIT_GUARD_FUNCTION_FUSE_H
 
+/// !!DEPRECATED: Please use unpack instead.
 /// fuse
 /// ====
 /// 
@@ -52,6 +53,8 @@
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
+#include <fit/detail/make.h>
+#include <fit/detail/static_constexpr.h>
 
 namespace fit {
 
@@ -89,11 +92,7 @@ struct variadic_adaptor<fuse_adaptor<F> > : F
     FIT_INHERIT_CONSTRUCTOR(variadic_adaptor, F);
 };
 
-template<class F>
-constexpr fuse_adaptor<F> fuse(F f)
-{
-    return fuse_adaptor<F>(fit::move(f));
-}
+FIT_STATIC_CONSTEXPR detail::make<fuse_adaptor> fuse = {};
 
 }
 
