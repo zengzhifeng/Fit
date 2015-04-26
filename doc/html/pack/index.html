@@ -9,13 +9,12 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-        <title>Home - Fit</title>
+	<title>pack - Fit</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
-        <link href="../css/prettify-1.0.css" rel="stylesheet">
         <link href="../css/base.css" rel="stylesheet">
-        
+        <link rel="stylesheet" href="../css/highlight.css">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -44,7 +43,7 @@
             
 
             <!-- Main title -->
-            <a class="navbar-brand" href="./">Fit</a>
+            <a class="navbar-brand" href="../index.html">Fit</a>
         </div>
 
         <!-- Expanded navigation -->
@@ -54,8 +53,8 @@
                 <ul class="nav navbar-nav">
                 
                 
-                    <li class="active">
-                        <a href="./">Home</a>
+                    <li >
+                        <a href="../index.html">Home</a>
                     </li>
                 
                 
@@ -65,15 +64,23 @@
                         <ul class="dropdown-menu">
                         
                             <li >
-                                <a href="../requirements/">Requirements</a>
+                                <a href="../quickstart/index.html">Quick Start</a>
                             </li>
                         
                             <li >
-                                <a href="../acknowledgements/">Acknowledgements</a>
+                                <a href="../concepts/index.html">Basic Concepts</a>
                             </li>
                         
                             <li >
-                                <a href="../license/">License</a>
+                                <a href="../requirements/index.html">Requirements</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../acknowledgements/index.html">Acknowledgements</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../license/index.html">License</a>
                             </li>
                         
                         </ul>
@@ -86,75 +93,79 @@
                         <ul class="dropdown-menu">
                         
                             <li >
-                                <a href="../by/">by</a>
+                                <a href="../by/index.html">by</a>
                             </li>
                         
                             <li >
-                                <a href="../compose/">compose</a>
+                                <a href="../compose/index.html">compose</a>
                             </li>
                         
                             <li >
-                                <a href="../conditional/">conditional</a>
+                                <a href="../conditional/index.html">conditional</a>
                             </li>
                         
                             <li >
-                                <a href="../fix/">fix</a>
+                                <a href="../fix/index.html">fix</a>
                             </li>
                         
                             <li >
-                                <a href="../fuse/">fuse</a>
+                                <a href="../flip/index.html">flip</a>
                             </li>
                         
                             <li >
-                                <a href="../implicit/">implicit</a>
+                                <a href="../implicit/index.html">implicit</a>
                             </li>
                         
                             <li >
-                                <a href="../indirect/">indirect</a>
+                                <a href="../indirect/index.html">indirect</a>
                             </li>
                         
                             <li >
-                                <a href="../infix/">infix</a>
+                                <a href="../infix/index.html">infix</a>
                             </li>
                         
                             <li >
-                                <a href="../invoke/">invoke</a>
+                                <a href="../lazy/index.html">lazy</a>
                             </li>
                         
                             <li >
-                                <a href="../lazy/">lazy</a>
+                                <a href="../match/index.html">match</a>
                             </li>
                         
                             <li >
-                                <a href="../match/">match</a>
+                                <a href="../mutable/index.html">mutable</a>
                             </li>
                         
                             <li >
-                                <a href="../mutable/">mutable</a>
+                                <a href="../partial/index.html">partial</a>
                             </li>
                         
                             <li >
-                                <a href="../partial/">partial</a>
+                                <a href="../pipable/index.html">pipable</a>
                             </li>
                         
                             <li >
-                                <a href="../pipable/">pipable</a>
+                                <a href="../protect/index.html">protect</a>
                             </li>
                         
                             <li >
-                                <a href="../protect/">protect</a>
+                                <a href="../result/index.html">result</a>
                             </li>
                         
                             <li >
-                                <a href="../reveal/">reveal</a>
+                                <a href="../reveal/index.html">reveal</a>
                             </li>
                         
                             <li >
-                                <a href="../static/">static</a>
+                                <a href="../static/index.html">static</a>
                             </li>
                         
                             <li >
-                                <a href="../variadic/">variadic</a>
+                                <a href="../unpack/index.html">unpack</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../variadic/index.html">variadic</a>
                             </li>
                         
                         </ul>
@@ -167,11 +178,19 @@
                         <ul class="dropdown-menu">
                         
                             <li >
-                                <a href="../always/">always</a>
+                                <a href="../always/index.html">always</a>
                             </li>
                         
                             <li >
-                                <a href="../identity/">identity</a>
+                                <a href="../args/index.html">args</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../identity/index.html">identity</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../placeholders/index.html">placeholders</a>
                             </li>
                         
                         </ul>
@@ -179,32 +198,40 @@
                 
                 
                 
-                    <li class="dropdown">
+                    <li class="dropdown active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Utilities <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
                             <li >
-                                <a href="../args/">args</a>
+                                <a href="../capture/index.html">capture</a>
                             </li>
                         
                             <li >
-                                <a href="../is_callable/">is_callable</a>
+                                <a href="../each_arg/index.html">each_arg</a>
                             </li>
                         
                             <li >
-                                <a href="../lambda/">FIT_STATIC_LAMBDA</a>
+                                <a href="../is_callable/index.html">is_callable</a>
                             </li>
                         
                             <li >
-                                <a href="../placeholders/">placeholders</a>
+                                <a href="../function/index.html">FIT_STATIC_FUNCTION</a>
                             </li>
                         
                             <li >
-                                <a href="../returns/">returns</a>
+                                <a href="../lambda/index.html">FIT_STATIC_LAMBDA</a>
+                            </li>
+                        
+                            <li class="active">
+                                <a href="index.html">pack</a>
                             </li>
                         
                             <li >
-                                <a href="../tap/">tap</a>
+                                <a href="../returns/index.html">returns</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../tap/index.html">tap</a>
                             </li>
                         
                         </ul>
@@ -219,13 +246,13 @@
             <ul class="nav navbar-nav navbar-right">
                 
                 
-                <li class="disabled">
-                    <a rel="next" >
+                <li >
+                    <a rel="next" href="../lambda/index.html">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="../requirements/">
+                    <a rel="prev" href="../returns/index.html">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -247,24 +274,60 @@
 </div>
 
         <div class="container">
-            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+            
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#overview">Overview</a></li>
+        <li class="main active"><a href="#pack">pack</a></li>
+        
+            <li><a href="#description">Description</a></li>
+        
+            <li><a href="#synopsis">Synopsis</a></li>
+        
+            <li><a href="#example">Example</a></li>
         
     
     </ul>
 </div></div>
-            <div class="col-md-9" role="main">
+                <div class="col-md-9" role="main">
 
-<h1 id="overview">Overview</h1>
-<p>Fit is an header-only C++ library that provides utilities for functions and function objects. Fit is divided into three components:</p>
-<ul>
-<li>Function Adaptors: These take functions and return a new function that provides an additional capability to the previous function.</li>
-<li>Functions: These return functions that acheive a specific purpose.</li>
-<li>Utilities: These are gneral utilities that are useful when defining or using functions</li>
-</ul>
-</div>
+<h1 id="pack">pack</h1>
+<h2 id="description">Description</h2>
+<p>The <code>pack</code> function returns a higher order function object that takes a
+function that will be passed the initial elements. The function object is
+a sequence that can be unpacked with <code>unpack_adaptor</code> as well. Also,
+<code>pack_join</code> can be used to join multiple packes together.</p>
+<h2 id="synopsis">Synopsis</h2>
+<pre><code>// Capture lvalues by reference and rvalues by value.
+template&lt;class... Ts&gt;
+constexpr auto pack(Ts&amp;&amp;... xs);
+
+// Capture lvalues by reference and rvalue reference by reference
+template&lt;class... Ts&gt;
+constexpr auto pack_perfect(Ts&amp;&amp;... xs);
+
+// Decay everything before capturing
+template&lt;class... Ts&gt;
+constexpr auto pack_decay(Ts&amp;&amp;... xs);
+
+// Join multiple packs together
+template&lt;class... Ts&gt;
+constexpr auto pack_join(Ts&amp;&amp;... xs);
+</code></pre>
+<h2 id="example">Example</h2>
+<pre><code>struct sum
+{
+    template&lt;class T, class U&gt;
+    T operator()(T x, U y) const
+    {
+        return x+y;
+    }
+};
+
+int r = pack(3, 2)(sum());
+assert(r == 5);
+</code></pre></div>
+            
         </div>
 
         <footer class="col-md-12">
@@ -275,10 +338,14 @@
 
         
 
-        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="../js/jquery-1.10.2.min.js"></script>
         <script src="../js/bootstrap-3.0.3.min.js"></script>
-        <script src="../js/prettify-1.0.min.js"></script>
+        <script src="../js/highlight.pack.js"></script>
         <script src="../js/base.js"></script>
-        
+
+        <!--
+        MkDocs version  : 0.12.2
+        Docs Build Date : 2015-04-26 00:21:27.602322
+        -->
     </body>
 </html>
