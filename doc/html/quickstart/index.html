@@ -311,7 +311,7 @@ struct sum_f
 <p>There are few things to note about this. First, the call operator member function is always declared <code>const</code>, which is generally required to be used with Fit.(Note: The <code>mutable_</code> adaptor can be used to make a mutable function object have a <code>const</code> call operator, but this should generally be avoided). Secondly, the <code>sum_f</code> class must be constructed first before it can be called:</p>
 <pre><code>auto three = sum_f()(1, 2);
 </code></pre>
-<p>We can make it behave like a regular function if we construct the class as a global variable. However, we want to statically initialize it(ie initialize it at compile-time) to avoid the static initializaion order fiasco. We can do that using <code>constexpr</code> like this:</p>
+<p>We can make it behave like a regular function if we construct the class as a global variable. However, we want to statically initialize it(ie initialize it at compile-time) to avoid the static initialization order fiasco. We can do that using <code>constexpr</code> like this:</p>
 <pre><code>const constexpr sum_f sum = {};
 </code></pre>
 <h2 id="adaptors">Adaptors</h2>
@@ -423,7 +423,7 @@ FIT_STATIC_FUNCTION(print) = conditional(
 
         <!--
         MkDocs version  : 0.12.2
-        Docs Build Date : 2015-04-26 01:23:23.856671
+        Docs Build Date : 2015-04-30 03:26:02.355903
         -->
     </body>
 </html>

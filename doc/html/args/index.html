@@ -293,14 +293,15 @@
 
 <h1 id="args">args</h1>
 <h2 id="description">Description</h2>
-<p>The <code>args</code> function returns the Nth argument passed to it. It actually
-starts at 1, so it is not the zero-based index of the argument.</p>
+<p>The <code>args</code> returns a function object that returns the Nth argument passed
+to it. It actually starts at 1, so it is not the zero-based index of the
+argument.</p>
 <h2 id="synopsis">Synopsis</h2>
-<pre><code>template&lt;int N, class... Ts&gt;
-constexpr auto args(Ts&amp;&amp;... xs);
+<pre><code>template&lt;class IntegralConstant&gt;
+constexpr auto args(IntegralConstant);
 </code></pre>
 <h2 id="example">Example</h2>
-<pre><code>assert(args&lt;3&gt;(1,2,3,4,5) == 3);
+<pre><code>assert(args(std::integral_constant&lt;int, 3&gt;())(1,2,3,4,5) == 3);
 </code></pre></div>
             
         </div>
@@ -321,7 +322,7 @@ constexpr auto args(Ts&amp;&amp;... xs);
 
         <!--
         MkDocs version  : 0.12.2
-        Docs Build Date : 2015-04-26 01:23:23.922702
+        Docs Build Date : 2015-04-30 03:26:02.422289
         -->
     </body>
 </html>
