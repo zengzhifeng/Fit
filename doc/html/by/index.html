@@ -203,15 +203,23 @@
                         <ul class="dropdown-menu">
                         
                             <li >
+                                <a href="../apply/index.html">apply</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../apply/index.html">apply</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../apply_eval/index.html">apply_eval</a>
+                            </li>
+                        
+                            <li >
                                 <a href="../capture/index.html">capture</a>
                             </li>
                         
                             <li >
-                                <a href="../each_arg/index.html">each_arg</a>
-                            </li>
-                        
-                            <li >
-                                <a href="../is_callable/index.html">is_callable</a>
+                                <a href="../eval/index.html">eval</a>
                             </li>
                         
                             <li >
@@ -220,6 +228,10 @@
                         
                             <li >
                                 <a href="../lambda/index.html">FIT_STATIC_LAMBDA</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../is_callable/index.html">is_callable</a>
                             </li>
                         
                             <li >
@@ -298,10 +310,16 @@
 <p>The <code>by</code> function adaptor applies a projection onto the parameters of
 another function. This is useful, for example, to define a function for
 sorting such that the ordering is based off of the value of one of its
-member fields.</p>
+member fields. </p>
+<p>Also, if just a projection is given, then the projection will be called
+for each of its arguments.</p>
+<p>Note: All projections are always evaluated in order from left-to-right.</p>
 <h2 id="synopsis">Synopsis</h2>
 <pre><code>template&lt;class Projection, class F&gt;
 constexpr by_adaptor&lt;Projection, F&gt; by(Projection p, F f);
+
+template&lt;class Projection&gt;
+constexpr by_adaptor&lt;Projection&gt; by(Projection p);
 </code></pre>
 <h2 id="requirements">Requirements</h2>
 <p>Projection must be:</p>
@@ -340,7 +358,7 @@ assert(fit::by(std::mem_fn(&amp;foo::x), _ + _)(foo(1), foo(2)) == 3);
 
         <!--
         MkDocs version  : 0.12.2
-        Docs Build Date : 2015-04-30 03:26:02.372473
+        Docs Build Date : 2015-05-10 04:00:43.852437
         -->
     </body>
 </html>

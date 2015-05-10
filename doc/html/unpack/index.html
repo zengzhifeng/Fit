@@ -203,15 +203,23 @@
                         <ul class="dropdown-menu">
                         
                             <li >
+                                <a href="../apply/index.html">apply</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../apply/index.html">apply</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../apply_eval/index.html">apply_eval</a>
+                            </li>
+                        
+                            <li >
                                 <a href="../capture/index.html">capture</a>
                             </li>
                         
                             <li >
-                                <a href="../each_arg/index.html">each_arg</a>
-                            </li>
-                        
-                            <li >
-                                <a href="../is_callable/index.html">is_callable</a>
+                                <a href="../eval/index.html">eval</a>
                             </li>
                         
                             <li >
@@ -220,6 +228,10 @@
                         
                             <li >
                                 <a href="../lambda/index.html">FIT_STATIC_LAMBDA</a>
+                            </li>
+                        
+                            <li >
+                                <a href="../is_callable/index.html">is_callable</a>
                             </li>
                         
                             <li >
@@ -289,11 +301,18 @@
             <li><a href="#example">Example</a></li>
         
     
-        <li class="main "><a href="#unpack_sequence">unpack_sequence</a></li>
+        <li class="main "><a href="#is_unpackable">is_unpackable</a></li>
         
             <li><a href="#synopsis_1">Synopsis</a></li>
         
             <li><a href="#example_1">Example</a></li>
+        
+    
+        <li class="main "><a href="#unpack_sequence">unpack_sequence</a></li>
+        
+            <li><a href="#synopsis_2">Synopsis</a></li>
+        
+            <li><a href="#example_2">Example</a></li>
         
     
     </ul>
@@ -328,14 +347,24 @@ MoveConstructible
 int r = unpack(sum())(std::make_tuple(3,2));
 assert(r == 5);
 </code></pre>
+<h1 id="is_unpackable">is_unpackable</h1>
+<p>This is a trait that can be used to detect whethet the type can be called
+with <code>unpack</code>.</p>
+<h2 id="synopsis_1">Synopsis</h2>
+<pre><code>template&lt;class T&gt;
+struct is_unpackable;
+</code></pre>
+<h2 id="example_1">Example</h2>
+<pre><code>static_assert(fit::is_unpackable&lt;std::tuple&lt;int&gt;&gt;::value, "Failed");
+</code></pre>
 <h1 id="unpack_sequence">unpack_sequence</h1>
 <p>How to unpack a sequence can be defined by specializing <code>unpack_sequence</code>.
 By default, <code>std::tuple</code> can be used with unpack.</p>
-<h2 id="synopsis_1">Synopsis</h2>
+<h2 id="synopsis_2">Synopsis</h2>
 <pre><code>template&lt;class Sequence, class=void&gt;
 struct unpack_sequence;
 </code></pre>
-<h2 id="example_1">Example</h2>
+<h2 id="example_2">Example</h2>
 <pre><code>template&lt;class... Ts&gt;
 struct unpack_sequence&lt;my_sequence&lt;Ts...&gt;&gt;
 {
@@ -365,7 +394,7 @@ struct unpack_sequence&lt;my_sequence&lt;Ts...&gt;&gt;
 
         <!--
         MkDocs version  : 0.12.2
-        Docs Build Date : 2015-04-30 03:26:02.415760
+        Docs Build Date : 2015-05-10 04:00:43.895712
         -->
     </body>
 </html>

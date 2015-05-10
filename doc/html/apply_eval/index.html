@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>conditional - Fit</title>
+	<title>apply_eval - Fit</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -88,7 +88,7 @@
                 
                 
                 
-                    <li class="dropdown active">
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Adaptors <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -100,8 +100,8 @@
                                 <a href="../compose/index.html">compose</a>
                             </li>
                         
-                            <li class="active">
-                                <a href="index.html">conditional</a>
+                            <li >
+                                <a href="../conditional/index.html">conditional</a>
                             </li>
                         
                             <li >
@@ -198,7 +198,7 @@
                 
                 
                 
-                    <li class="dropdown">
+                    <li class="dropdown active">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Utilities <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         
@@ -210,8 +210,8 @@
                                 <a href="../apply/index.html">apply</a>
                             </li>
                         
-                            <li >
-                                <a href="../apply_eval/index.html">apply_eval</a>
+                            <li class="active">
+                                <a href="index.html">apply_eval</a>
                             </li>
                         
                             <li >
@@ -259,12 +259,12 @@
                 
                 
                 <li >
-                    <a rel="next" href="../compose/index.html">
+                    <a rel="next" href="../apply/index.html">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="../fix/index.html">
+                    <a rel="prev" href="../capture/index.html">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -290,7 +290,7 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#conditional">conditional</a></li>
+        <li class="main active"><a href="#apply_eval">apply_eval</a></li>
         
             <li><a href="#description">Description</a></li>
         
@@ -305,50 +305,32 @@
 </div></div>
                 <div class="col-md-9" role="main">
 
-<h1 id="conditional">conditional</h1>
+<h1 id="apply_eval">apply_eval</h1>
 <h2 id="description">Description</h2>
-<p>The <code>conditional</code> function adaptor combines several functions together. If
-the first function can not be called, then it will try to call the next
-function. This can very useful when overloading functions using template
-constraints(such as with <code>enable_if</code>).</p>
-<p>Note: This is different than the <code>match</code> function adaptor, which can lead
-to ambiguities. Instead, <code>conditional</code> will call the first function that
-is callable, regardless if there is another function that could be called
-as well. </p>
+<p>The <code>apply_eval</code> function work like apply, except it calls <code>eval</code> on each of
+its arguments. Each <code>eval</code> call is always ordered from left-to-right.</p>
 <h2 id="synopsis">Synopsis</h2>
-<pre><code>template&lt;class... Fs&gt;
-constexpr conditional_adaptor&lt;Fs...&gt; conditional(Fs... fs);
+<pre><code>template&lt;class F, class... Ts&gt;
+constexpr auto apply_eval(F&amp;&amp; f, Ts&amp;&amp;... xs);
 </code></pre>
 <h2 id="requirements">Requirements</h2>
-<p>Fs must be:</p>
+<p>F must be:</p>
 <pre><code>FunctionObject
-MoveConstructible
+</code></pre>
+<p>Ts must be:</p>
+<pre><code>Evaluatable
 </code></pre>
 <h2 id="example">Example</h2>
-<pre><code>struct for_ints
+<pre><code>struct sum_f
 {
-    void operator()(int) const
+    template&lt;class T, class U&gt;
+    T operator()(T x, U y) const
     {
-        printf("Int\n");
+        return x+y;
     }
 };
-
-struct for_floats
-{
-    void operator()(int) const
-    {
-        printf("Float\n");
-    }
-};
-
-conditional(for_ints(), for_floats())(3.0);
-</code></pre>
-<p>This will print <code>Int</code> because the <code>for_floats</code> function object won't ever be
-called. Due to the conversion rules in C++, the <code>for_ints</code> function can be
-called on floats, so it is chosen by <code>conditional</code> first, even though
-<code>for_floats</code> is a better match.</p>
-<p>So, the order of the functions in the <code>conditional_adaptor</code> are very important
-to how the function is chosen.</p></div>
+assert(fit::apply_eval(sum_f(), []{ return 1; }, []{ return 2; }) == 3);
+</code></pre></div>
             
         </div>
 
@@ -368,7 +350,7 @@ to how the function is chosen.</p></div>
 
         <!--
         MkDocs version  : 0.12.2
-        Docs Build Date : 2015-05-10 04:00:43.857839
+        Docs Build Date : 2015-05-10 04:00:43.913905
         -->
     </body>
 </html>
