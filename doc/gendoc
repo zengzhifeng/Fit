@@ -6,20 +6,20 @@ function extract
 }
 
 extract always
+extract apply
+extract apply_eval
 extract args
 extract capture
 extract compose
 extract conditional
-extract each_arg
+extract eval
 extract fix
 extract flip
 extract function
-extract fuse
 extract identity
 extract implicit
 extract indirect
 extract infix
-extract invoke
 extract is_callable
 extract lambda
 extract lazy
