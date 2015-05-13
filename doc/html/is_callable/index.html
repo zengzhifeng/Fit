@@ -302,9 +302,9 @@
 <h1 id="is_callable">is_callable</h1>
 <h2 id="description">Description</h2>
 <p>The <code>is_callable</code> metafunction checks if the function object is callable with
-the certain parameters. It uses the same signature as <code>result_of</code>.</p>
+the certain parameters.</p>
 <h2 id="synopsis">Synopsis</h2>
-<pre><code>template&lt;class Sig&gt;
+<pre><code>template&lt;class F, class... Ts&gt;
 struct is_callable;
 </code></pre>
 <h2 id="example">Example</h2>
@@ -314,7 +314,7 @@ struct is_callable;
     {
     }
 };
-static_assert(is_callable&lt;is_callable_class(int)&gt;(), "Not callable");
+static_assert(is_callable&lt;is_callable_class, int&gt;(), "Not callable");
 </code></pre></div>
             
         </div>
@@ -335,7 +335,7 @@ static_assert(is_callable&lt;is_callable_class(int)&gt;(), "Not callable");
 
         <!--
         MkDocs version  : 0.12.2
-        Docs Build Date : 2015-05-10 04:03:31.731794
+        Docs Build Date : 2015-05-13 14:49:43.404392
         -->
     </body>
 </html>
