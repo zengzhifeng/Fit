@@ -303,8 +303,9 @@
 
 <h1 id="fit_static_function">FIT_STATIC_FUNCTION</h1>
 <h2 id="description">Description</h2>
-<p>The <code>FIT_STATIC_FUNCTION</code> macro allows initializing a function object from
-lambdas and adaptors at compile-time in a <code>constexpr</code> expression.</p>
+<p>The <code>FIT_STATIC_FUNCTION</code> macro allows initializing a function object from a
+<code>constexpr</code> expression. It also ensures that the function object will have a
+unique address across translation units. This helps to avoid ODR violations.</p>
 <h2 id="example">Example</h2>
 <pre><code>FIT_STATIC_FUNCTION(sum) = fit::partial([](int x, int y)
 {
@@ -330,7 +331,7 @@ lambdas and adaptors at compile-time in a <code>constexpr</code> expression.</p>
 
         <!--
         MkDocs version  : 0.12.2
-        Docs Build Date : 2015-05-22 18:58:00.288090
+        Docs Build Date : 2015-05-31 02:50:29.611874
         -->
     </body>
 </html>
