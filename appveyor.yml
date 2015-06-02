@@ -27,7 +27,9 @@ build_script:
  - cmd: mkdir build
  - cmd: cd build
  - cmd: cmake .. -G"%GENERATOR%"
- - cmd: cmake --build . --config %CONFIG% --target check
+ - cmd: cmake --build . --config %CONFIG% --target args
+ - cmd: cd Debug
+ - cmd: args.exe
 
 # test_script:
 #  - cmd: ctest -C Debug --output-on-failure
