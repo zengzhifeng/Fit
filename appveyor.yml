@@ -31,7 +31,7 @@ build_script:
  - cmd: dir /s
  - cmd: cd Debug
  - cmd: dir /s
- - cmd: args.exe
+ - cmd: msvc_args.exe
 
 # test_script:
 #  - cmd: ctest -C Debug --output-on-failure

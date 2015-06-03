@@ -65,7 +65,7 @@ endif()
 
 include_directories(.)
 
-add_executable(args test/args.cpp)
+add_executable(msvc_args test/args.cpp)
 
 # add_test_executable(always)
 # add_test_executable(apply)
