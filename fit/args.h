@@ -10,7 +10,6 @@
 
 #include <fit/detail/seq.h>
 #include <fit/returns.h>
-#include <utility>
 
 /// args
 /// ====

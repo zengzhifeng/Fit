@@ -8,7 +8,7 @@
 #ifndef FIT_GUARD_MOVE_H
 #define FIT_GUARD_MOVE_H
 
-#include <utility>
+#include <type_traits>
 
 namespace fit {
 
