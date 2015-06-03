@@ -27,7 +27,7 @@ build_script:
  - cmd: mkdir build
  - cmd: cd build
  - cmd: cmake .. -G"%GENERATOR%"
- - cmd: cmake --build . --config %CONFIG% --target args
+ - cmd: cmake --build . --config %CONFIG% --target msvc_args
  - cmd: dir /s
  - cmd: cd Debug
  - cmd: dir /s
