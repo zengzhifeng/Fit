@@ -43,7 +43,7 @@
 /// 
 
 #include <fit/always.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/reveal.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/move.h>
@@ -102,7 +102,8 @@ struct fix_adaptor_base : F
     FIT_RETURNS_CLASS(fix_adaptor_base);
 
     template<class... Ts>
-    FIT_FIX_CONSTEXPR auto operator()(Ts&&... xs) const FIT_RETURNS
+    FIT_FIX_CONSTEXPR FIT_SFINAE_RESULT(const F&, id_<const Derived&>, id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...))
             (FIT_MANGLE_CAST(const Derived&)(FIT_CONST_THIS->derived_function(xs...)), fit::forward<Ts>(xs)...)
@@ -113,6 +114,7 @@ struct fix_adaptor_base : F
 template<class F>
 struct fix_adaptor : detail::fix_adaptor_base<fix_adaptor<F>, F>
 {
+    typedef fix_adaptor fit_rewritable1_tag;
     typedef detail::fix_adaptor_base<fix_adaptor<F>, F> base;
     FIT_INHERIT_CONSTRUCTOR(fix_adaptor, base);
 };

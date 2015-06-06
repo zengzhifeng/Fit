@@ -48,7 +48,7 @@
 /// 
 
 #include <fit/detail/delegate.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/reveal.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
@@ -60,6 +60,7 @@ namespace fit {
 template<class F>
 struct indirect_adaptor : F
 {
+    typedef indirect_adaptor fit_rewritable1_tag;
     FIT_INHERIT_CONSTRUCTOR(indirect_adaptor, F);
 
     template<class... Ts>
@@ -75,7 +76,8 @@ struct indirect_adaptor : F
     FIT_RETURNS_CLASS(indirect_adaptor);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(decltype(*std::declval<F>()), id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         (*FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(fit::forward<Ts>(xs)...)
     );

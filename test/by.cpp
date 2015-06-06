@@ -20,11 +20,20 @@ struct select_x
 
 FIT_TEST_CASE()
 {
-    constexpr auto add = fit::_ + fit::_;
+#ifndef _MSC_VER
+    constexpr 
+#endif
+    auto add = fit::_ + fit::_;
     FIT_STATIC_TEST_CHECK(fit::by(select_x(), add)(foo(1), foo(2)) == 3);
     // Using mutable_ as a workaround on libc++, since mem_fn does not meet the
     // requirements of a FunctionObject
     FIT_TEST_CHECK(fit::by(fit::mutable_(std::mem_fn(&foo::x)), add)(foo(1), foo(2)) == 3);
+}
+
+FIT_TEST_CASE()
+{
+    auto indirect_add = fit::by(*fit::_, fit::_ + fit::_);
+    FIT_TEST_CHECK(indirect_add(std::unique_ptr<int>(new int(1)), std::unique_ptr<int>(new int(2))) == 3);
 }
 
 struct select_x_1

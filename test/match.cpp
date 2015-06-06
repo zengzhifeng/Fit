@@ -92,8 +92,10 @@ FIT_TEST_CASE()
         [&](int) { return i+1; },
         [&](foo) { return i+2; }
     );
+// Disable this check on msvc, since lambdas might be default constructible
+#ifndef _MSC_VER
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(lam));
-    
+#endif
     FIT_TEST_CHECK(lam(1) == 1);
     FIT_TEST_CHECK(lam(foo()) == 2);
 };
@@ -113,7 +115,10 @@ FIT_TEST_CASE()
         [&](int) { return ndc.i+1; },
         [&](foo) { return ndc.i+2; }
     );
+// Disable this check on msvc, since lambdas might be default constructible
+#ifndef _MSC_VER
     STATIC_ASSERT_NOT_DEFAULT_CONSTRUCTIBLE(decltype(lam));
+#endif
     
     FIT_TEST_CHECK(lam(1) == 1);
     FIT_TEST_CHECK(lam(foo()) == 2);

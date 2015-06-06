@@ -50,7 +50,7 @@
 /// 
 
 #include <fit/detail/delegate.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
@@ -78,13 +78,15 @@ struct postfix_adaptor : F
     FIT_RETURNS_CLASS(postfix_adaptor);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<Ts>...)
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(xs...)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<Ts>(xs)...)
     );
 
     template<class A>
-    constexpr auto operator>(A&& a) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F&, id_<T&&>, id_<A>)
+    operator>(A&& a) const FIT_SFINAE_RETURNS
     (
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->base_function(a)))(FIT_MANGLE_CAST(T&&)(fit::move(FIT_CONST_THIS->x)), fit::forward<A>(a))
     );
@@ -100,6 +102,7 @@ constexpr postfix_adaptor<T, F> make_postfix_adaptor(T&& x, F f)
 template<class F>
 struct infix_adaptor : F
 {
+    typedef infix_adaptor fit_rewritable1_tag;
     FIT_INHERIT_CONSTRUCTOR(infix_adaptor, F);
 
     template<class... Ts>
@@ -139,6 +142,16 @@ template<class T, class F>
 auto operator<(T&& x, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
 (
     detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(f.base_function().infix_base_function()))
+);
+
+template<class F>
+struct static_default_function;
+
+// Operators for static_default_function adaptor
+template<class T, class F>
+auto operator<(T&& x, const fit::detail::static_default_function<F>&) FIT_RETURNS
+(
+    detail::make_postfix_adaptor(fit::forward<T>(x), fit::move(F().infix_base_function()))
 );
 }
 

@@ -96,14 +96,16 @@ struct pipe_closure : F, Pack
         FIT_RETURNS_CLASS(invoke);
 
         template<class... Ts>
-        constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+        constexpr FIT_SFINAE_RESULT(const F&, id_<A>, id_<Ts>...) 
+        operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
         (FIT_MANGLE_CAST(const F&)(FIT_CONST_THIS->self->base_function(xs...))(fit::forward<A>(a), fit::forward<Ts>(xs)...));
     };
 
     FIT_RETURNS_CLASS(pipe_closure);
 
     template<class A>
-    constexpr auto operator()(A&& a) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const Pack&, id_<invoke<A&&>>) 
+    operator()(A&& a) const FIT_SFINAE_RETURNS
     (FIT_MANGLE_CAST(const Pack&)(FIT_CONST_THIS->get_pack(a))(invoke<A&&>(fit::forward<A>(a), FIT_CONST_THIS)));
 };
 
@@ -141,6 +143,7 @@ struct pipable_adaptor
 : conditional_adaptor<F, detail::pipe_pack<pipable_adaptor<F>, F> >
 {
     typedef conditional_adaptor<F, detail::pipe_pack<pipable_adaptor<F>, F> > base;
+    typedef pipable_adaptor fit_rewritable_tag;
 
     FIT_INHERIT_CONSTRUCTOR(pipable_adaptor, base);
 
@@ -164,6 +167,14 @@ struct static_function_wrapper;
 // Operators for static_function_wrapper adaptor
 template<class A, class F>
 auto operator|(A&& a, const fit::detail::static_function_wrapper<F>& f) FIT_RETURNS
+(f(fit::forward<A>(a)));
+
+template<class F>
+struct static_default_function;
+
+// Operators for static_default_function adaptor
+template<class A, class F>
+auto operator|(A&& a, const fit::detail::static_default_function<F>& f) FIT_RETURNS
 (f(fit::forward<A>(a)));
 
 }

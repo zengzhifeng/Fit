@@ -59,7 +59,7 @@
 ///     assert(r == 4);
 /// 
 
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/compressed_pair.h>
@@ -81,7 +81,8 @@ struct compose_kernel : detail::compressed_pair<F1, F2>
     FIT_RETURNS_CLASS(compose_kernel);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F1&, result_of<const F2&, id_<Ts>...>) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         FIT_MANGLE_CAST(const F1&)(FIT_CONST_THIS->first(xs...))(
             FIT_MANGLE_CAST(const F2&)(FIT_CONST_THIS->second(xs...))(fit::forward<Ts>(xs)...)
@@ -93,6 +94,7 @@ struct compose_kernel : detail::compressed_pair<F1, F2>
 template<class F, class... Fs>
 struct compose_adaptor : detail::compose_kernel<F, FIT_JOIN(compose_adaptor, Fs...)>
 {
+    typedef compose_adaptor fit_rewritable_tag;
     typedef FIT_JOIN(compose_adaptor, Fs...) tail;
     typedef detail::compose_kernel<F, tail> base;
 
@@ -107,6 +109,7 @@ struct compose_adaptor : detail::compose_kernel<F, FIT_JOIN(compose_adaptor, Fs.
 template<class F>
 struct compose_adaptor<F> : F
 {
+    typedef compose_adaptor fit_rewritable_tag;
     constexpr compose_adaptor() {}
 
     template<class X, FIT_ENABLE_IF_CONVERTIBLE(X, F)>

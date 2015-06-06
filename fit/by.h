@@ -63,7 +63,7 @@
 #include <utility>
 #include <fit/always.h>
 #include <fit/detail/delegate.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/detail/move.h>
 #include <fit/detail/make.h>
 #include <fit/detail/static_const_var.h>
@@ -154,6 +154,7 @@ struct swallow
 template<class Projection, class F=void>
 struct by_adaptor : Projection, F
 {
+    typedef by_adaptor fit_rewritable_tag;
     template<class... Ts>
     constexpr const F& base_function(Ts&&... xs) const
     {
@@ -174,7 +175,8 @@ struct by_adaptor : Projection, F
     FIT_RETURNS_CLASS(by_adaptor);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT(const F&, result_of<const Projection&, id_<Ts>>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         detail::by_eval(
             FIT_MANGLE_CAST(const Projection&)(FIT_CONST_THIS->base_projection(xs...)),
@@ -187,6 +189,7 @@ struct by_adaptor : Projection, F
 template<class Projection>
 struct by_adaptor<Projection, void> : Projection
 {
+    typedef by_adaptor fit_rewritable1_tag;
     template<class... Ts>
     constexpr const Projection& base_projection(Ts&&... xs) const
     {

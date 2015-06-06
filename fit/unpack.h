@@ -153,6 +153,7 @@ struct is_unpackable
 template<class F>
 struct unpack_adaptor : F
 {
+    typedef unpack_adaptor fit_rewritable1_tag;
     FIT_INHERIT_CONSTRUCTOR(unpack_adaptor, F);
 
     template<class... Ts>
@@ -235,10 +236,16 @@ make_tuple_gens(const Sequence&)
     return {};
 }
 
-template<class F, class T, int ...N>
-constexpr auto unpack_tuple(F&& f, T && t, seq<N...>) FIT_RETURNS
+template<class F, class... Ts, int ...N>
+constexpr auto unpack_tuple(F&& f, std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
 (
-    f(FIT_AUTO_FORWARD(std::get<N>(t))...)
+    f(fit::forward<Ts>(std::get<N>(t))...)
+);
+
+template<class F, class... Ts, int ...N>
+constexpr auto unpack_tuple(F&& f, const std::tuple<Ts...> & t, seq<N...>) FIT_RETURNS
+(
+    f(fit::forward<Ts>(std::get<N>(t))...)
 );
 
 }
@@ -249,7 +256,7 @@ struct unpack_sequence<std::tuple<Ts...>>
     template<class F, class S>
     constexpr static auto apply(F&& f, S&& t) FIT_RETURNS
     (
-        detail::unpack_tuple(fit::forward<F>(f), fit::forward<S>(t), detail::make_tuple_gens(t))
+        detail::unpack_tuple(fit::forward<F>(f), t, detail::make_tuple_gens(t))
     );
 };
 

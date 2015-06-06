@@ -8,6 +8,7 @@
 #ifndef FIT_GUARD_CAPTURE_H
 #define FIT_GUARD_CAPTURE_H
 
+#include <fit/detail/result_of.h>
 #include <fit/pack.h>
 #include <fit/always.h>
 #include <fit/detail/move.h>
@@ -62,6 +63,7 @@ namespace detail {
 template<class F, class Pack>
 struct capture_invoke : F, Pack
 {
+    typedef capture_invoke fit_rewritable1_tag;
     template<class X, class Y>
     constexpr capture_invoke(X&& x, Y&& y) : F(fit::forward<X>(x)), Pack(fit::forward<Y>(y))
     {}
@@ -80,7 +82,15 @@ struct capture_invoke : F, Pack
     FIT_RETURNS_CLASS(capture_invoke);
 
     template<class... Ts>
-    constexpr auto operator()(Ts&&... xs) const FIT_RETURNS
+    constexpr FIT_SFINAE_RESULT
+    (
+        typename result_of<decltype(fit::pack_join), 
+            id_<const Pack&>, 
+            result_of<decltype(fit::pack_forward), id_<Ts>...> 
+        >::type,
+        id_<F&&>
+    ) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         fit::pack_join
         (
@@ -100,7 +110,7 @@ struct capture_pack : Pack
 
     // TODO: Should use rvalue ref qualifier
     template<class F>
-    constexpr auto operator()(F f) const FIT_RETURNS
+    constexpr auto operator()(F f) const FIT_SFINAE_RETURNS
     (
         capture_invoke<F, Pack>(fit::move(f), 
             FIT_RETURNS_C_CAST(Pack&&)(

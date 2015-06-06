@@ -51,7 +51,6 @@
 #include <fit/conditional.h>
 #include <fit/always.h>
 #include <fit/static.h>
-#include <fit/invoke.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/compressed_pair.h>
 #include <fit/pack.h>
@@ -104,14 +103,14 @@ struct ref_transformer
 {
     template<class T, typename std::enable_if<is_reference_wrapper<T>::value, int>::type = 0>
     constexpr auto operator()(T x) const 
-    FIT_RETURNS(always_ref(x.get()));
+    FIT_SFINAE_RETURNS(always_ref(x.get()));
 };
 
 struct id_transformer
 {
     template<class T>
     constexpr auto operator()(const T& x) const 
-    FIT_RETURNS(always_ref(x));
+    FIT_SFINAE_RETURNS(always_ref(x));
 };
 
 FIT_DECLARE_STATIC_VAR(pick_transformer, conditional_adaptor<placeholder_transformer, bind_transformer, ref_transformer, id_transformer>);
@@ -150,6 +149,7 @@ struct lazy_invoker
 : detail::compressed_pair<F, Pack>
 {
     typedef detail::compressed_pair<F, Pack> base_type;
+    typedef lazy_invoker fit_rewritable1_tag;
 
     FIT_INHERIT_CONSTRUCTOR(lazy_invoker, base_type)
 

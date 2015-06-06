@@ -69,7 +69,7 @@
 
 #include <fit/is_callable.h>
 #include <fit/reveal.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/detail/delegate.h>
 #include <fit/detail/join.h>
 #include <fit/detail/make.h>
@@ -110,8 +110,9 @@ struct conditional_kernel : F1, F2
     FIT_RETURNS_CLASS(conditional_kernel);
 
     template<class... Ts>
-    constexpr auto operator()(Ts && ... x) const
-    FIT_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(fit::forward<Ts>(x)...));
+    constexpr FIT_SFINAE_RESULT(typename select<Ts...>::type, id_<Ts>...) 
+    operator()(Ts && ... x) const
+    FIT_SFINAE_RETURNS(FIT_CONST_THIS->select_function<Ts&&...>()(fit::forward<Ts>(x)...));
 };
 }
 
@@ -119,6 +120,7 @@ template<class F, class... Fs>
 struct conditional_adaptor 
 : detail::conditional_kernel<F, FIT_JOIN(conditional_adaptor, Fs...) >
 {
+    typedef conditional_adaptor fit_rewritable_tag;
     typedef FIT_JOIN(conditional_adaptor, Fs...) kernel_base;
     typedef detail::conditional_kernel<F, kernel_base > base;
 
@@ -139,6 +141,7 @@ struct conditional_adaptor
 template<class F>
 struct conditional_adaptor<F> : F
 {
+    typedef conditional_adaptor fit_rewritable_tag;
     FIT_INHERIT_CONSTRUCTOR(conditional_adaptor, F);
 
     struct failure

@@ -45,18 +45,29 @@
 ///     };
 /// 
 
-#include <fit/function.h>
 #include <type_traits>
 #include <utility>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 #include <fit/reveal.h>
 #include <fit/detail/static_constexpr.h>
 #include <fit/detail/static_const_var.h>
 
 #define FIT_CONST_FOLD(x) (__builtin_constant_p(x) ? (x) : (x))
 
+#ifndef FIT_REWRITE_STATIC_LAMBDA
+#ifdef _MSC_VER
+#define FIT_REWRITE_STATIC_LAMBDA 1
+#else
+#define FIT_REWRITE_STATIC_LAMBDA 0
+#endif
+#endif
+
 #ifndef FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
+#if defined(_MSC_VER) || FIT_REWRITE_STATIC_LAMBDA
+#define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 1
+#else
 #define FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR 0
+#endif
 #endif
 
 namespace fit {
@@ -66,6 +77,10 @@ namespace detail {
 template<class F>
 struct static_function_wrapper
 {
+    // Default constructor necessary for MSVC
+    constexpr static_function_wrapper()
+    {}
+
     static_assert(std::is_empty<F>::value, "Function or lambda expression must be empty");
 
     struct failure
@@ -81,7 +96,8 @@ struct static_function_wrapper
     FIT_RETURNS_CLASS(static_function_wrapper);
 
     template<class... Ts>
-    auto operator()(Ts&&... xs) const FIT_RETURNS
+    FIT_SFINAE_RESULT(const F&, id_<Ts>...) 
+    operator()(Ts&&... xs) const FIT_SFINAE_RETURNS
     (
         FIT_RETURNS_REINTERPRET_CAST(const F&)(*FIT_CONST_THIS)(fit::forward<Ts>(xs)...)
     );
@@ -97,10 +113,84 @@ struct static_function_wrapper_factor
     }
 };
 
+#if FIT_REWRITE_STATIC_LAMBDA
+template<class T, class=void>
+struct is_rewritable
+: std::false_type
+{};
+
 template<class T>
-struct reveal_static_function_wrapper_factor
+struct is_rewritable<T, typename detail::holder<
+    typename T::fit_rewritable_tag
+>::type>
+: std::is_same<typename T::fit_rewritable_tag, T>
+{};
+
+template<class T, class=void>
+struct is_rewritable1
+: std::false_type
+{};
+
+template<class T>
+struct is_rewritable1<T, typename detail::holder<
+    typename T::fit_rewritable1_tag
+>::type>
+: std::is_same<typename T::fit_rewritable1_tag, T>
+{};
+
+
+template<class T, class=void>
+struct rewrite_lambda;
+
+template<template<class...> class Adaptor, class... Ts>
+struct rewrite_lambda<Adaptor<Ts...>, typename std::enable_if<
+    is_rewritable<Adaptor<Ts...>>::value
+>::type>
 {
-#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
+    typedef Adaptor<typename rewrite_lambda<Ts>::type...> type;
+};
+
+template<template<class...> class Adaptor, class T, class... Ts>
+struct rewrite_lambda<Adaptor<T, Ts...>, typename std::enable_if<
+    is_rewritable1<Adaptor<T, Ts...>>::value
+>::type>
+{
+    typedef Adaptor<typename rewrite_lambda<T>::type, Ts...> type;
+};
+
+template<class T>
+struct rewrite_lambda<T, typename std::enable_if<
+    std::is_empty<T>::value && 
+    !is_rewritable<T>::value && 
+    !is_rewritable1<T>::value
+>::type>
+{
+    typedef static_function_wrapper<T> type;
+};
+
+template<class T>
+struct rewrite_lambda<T, typename std::enable_if<
+    !std::is_empty<T>::value && 
+    !is_rewritable<T>::value && 
+    !is_rewritable1<T>::value
+>::type>
+{
+    typedef T type;
+};
+
+#endif
+
+template<class T>
+struct reveal_static_lambda_function_wrapper_factor
+{
+#if FIT_REWRITE_STATIC_LAMBDA
+    template<class F>
+    constexpr reveal_adaptor<typename rewrite_lambda<F>::type> 
+    operator += (F*)
+    {
+        return {};
+    }
+#elif FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
     template<class F>
     constexpr reveal_adaptor<static_function_wrapper<F>> operator += (F*)
     {
@@ -127,14 +217,14 @@ struct static_addr
 
 }}
 
-#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR
+#if FIT_NO_UNIQUE_STATIC_LAMBDA_FUNCTION_ADDR || FIT_REWRITE_STATIC_LAMBDA
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_CONSTEXPR auto
 #else
 #define FIT_DETAIL_STATIC_FUNCTION_AUTO FIT_STATIC_AUTO_REF
 #endif
 
 #define FIT_DETAIL_MAKE_STATIC fit::detail::static_function_wrapper_factor() += true ? nullptr : fit::detail::static_addr()
-#define FIT_DETAIL_MAKE_REVEAL_STATIC(T) fit::detail::reveal_static_function_wrapper_factor<T>() += true ? nullptr : fit::detail::static_addr()
+#define FIT_DETAIL_MAKE_REVEAL_STATIC(T) fit::detail::reveal_static_lambda_function_wrapper_factor<T>() += true ? nullptr : fit::detail::static_addr()
 #define FIT_STATIC_LAMBDA_FUNCTION(name) \
 struct fit_private_static_function_ ## name {}; \
 FIT_DETAIL_STATIC_FUNCTION_AUTO name = FIT_DETAIL_MAKE_REVEAL_STATIC(fit_private_static_function_ ## name)

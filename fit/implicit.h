@@ -64,9 +64,8 @@
 ///     assert(1 == x.i);
 /// 
 
-#include <fit/invoke.h>
 #include <fit/pack.h>
-#include <fit/returns.h>
+#include <fit/detail/result_of.h>
 
 namespace fit { namespace detail {
 
@@ -75,13 +74,21 @@ struct is_implicit_callable
 : std::false_type
 {};
 
+#if FIT_NO_EXPRESSION_SFINAE
+template<class F, class Pack, class X>
+struct is_implicit_callable<F, Pack, X, typename std::enable_if<
+    std::is_convertible<typename result_of<Pack, id_<F>>::type, X>::value
+>::type>
+: std::true_type
+{};
+#else
 template<class F, class Pack, class X>
 struct is_implicit_callable<F, Pack, X, typename std::enable_if<
     std::is_convertible<decltype(std::declval<Pack>()(std::declval<F>())), X>::value
 >::type>
 : std::true_type
 {};
-
+#endif
 template<template <class...> class F, class Pack>
 struct implicit_invoke
 {
