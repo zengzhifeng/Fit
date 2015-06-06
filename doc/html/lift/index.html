@@ -307,7 +307,7 @@
 <h2 id="description">Description</h2>
 <p>The <code>lift</code> operator will wrap a template function in a function object so it
 can be passed to higher-order functions. The <code>FIT_LIFT</code> macro will wrap the
-function using a generic lambdas. As such, it will not preserve <code>constexpr</code>.
+function using a generic lambda. As such, it will not preserve <code>constexpr</code>.
 The <code>FIT_LIFT_CLASS</code> can be used to declare a class that will wrap function.
 This will preserve <code>constexpr</code> and it can be used on older compilers that
 don't support generic lambdas yet.</p>
@@ -344,7 +344,7 @@ assert(max_f()(3, 4) == std::max(3, 4));
 
         <!--
         MkDocs version  : 0.12.2
-        Docs Build Date : 2015-06-06 14:44:58.245166
+        Docs Build Date : 2015-06-06 15:18:15.487147
         -->
     </body>
 </html>
